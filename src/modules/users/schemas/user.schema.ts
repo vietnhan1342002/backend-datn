@@ -1,9 +1,10 @@
+import { Role } from '@/modules/roles/schemas/role.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema({timestamps: true})
+@Schema({ timestamps: true })
 export class User {
   @Prop({ required: true })
   userName: string;
@@ -14,21 +15,21 @@ export class User {
   @Prop({ required: true })
   fullName: string;
 
-  @Prop({ required: true })
-  role: string;
-
   @Prop({ required: true, unique: true })
   email: string;
 
   @Prop({ required: true })
   phoneNumber: string;
 
+  @Prop({ type: Types.ObjectId, ref: Role.name })
+  role: Role;  // Liên kết người dùng với role
 
-  @Prop()
+
+  @Prop({enum:['LOCAL','GOOGLE'],default:'LOCAL'})
   accountType: string;
 
-  @Prop()
-  isActive: string;
+  @Prop({default:false})
+  isActive: boolean;
 
   @Prop()
   codeId: string;
